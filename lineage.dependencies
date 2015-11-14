@@ -12,6 +12,10 @@
     "target_path": "hardware/sony/timekeep"
   },
   {
+    "repository": "android_hardware_sony_thermanager",
+    "target_path": "hardware/sony/thermanager"
+  },
+  {
     "repository": "android_kernel_sony_msm8994",
     "target_path": "kernel/sony/msm8994"
   }

@@ -271,9 +271,13 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
    camera.qcom_shim
 
-# Thermal
+# Thermal management
 PRODUCT_PACKAGES += \
-    android.hardware.thermal@1.0-impl
+    android.hardware.thermal@1.0-impl \
+    android.hardware.thermal@1.0-service
+
+PRODUCT_PACKAGES += \
+    thermanager
 
 # TimeKeep
 PRODUCT_PACKAGES += \
