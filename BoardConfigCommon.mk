@@ -159,6 +159,7 @@ BOARD_ROOT_EXTRA_FOLDERS := \
     firmware \
     persist \
     idd \
+    lta-label \
     rca
 
 # RIL
