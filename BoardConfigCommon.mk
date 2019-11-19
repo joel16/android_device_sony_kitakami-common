@@ -139,6 +139,13 @@ TARGET_USES_INTERACTION_BOOST := true
 # Properties
 TARGET_SYSTEM_PROP += $(COMMON_PATH)/system.prop
 
+BOARD_ROOT_EXTRA_FOLDERS := \
+    firmware \
+    persist \
+    idd \
+    lta-label \
+    rca
+
 # RPC
 TARGET_NO_RPC := true
 
