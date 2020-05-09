@@ -462,6 +462,12 @@ on post-fs-data
 
 on property:init.svc.wpa_supplicant=stopped
     stop dhcpcd
+    
+service ppd /system/vendor/bin/mm-pp-daemon
+    class hal
+    user system
+    socket pps stream 0660 system system
+    group system graphics
 
 service irsc_util /system/bin/irsc_util "/etc/sec_config"
     class main
