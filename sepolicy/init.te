@@ -1,0 +1,30 @@
+allow init block_device:blk_file setattr;
+allow init cameraserver:fd use;
+allow init debugfs:file w_file_perms;
+allow init diag_data_file:file create_file_perms;
+allow init diag_data_file:sock_file write;
+allow init ion_device:chr_file ioctl;
+allow init persist_file:dir mounton;
+allow init proc_dirty_ratio:file write;
+allow init proc_interrupts:file getattr;
+allow init proc_kernel_sched:file write;
+allow init property_socket:sock_file write;
+allow init rpmb_device:blk_file write;
+allow init secd_data_file:file r_file_perms;
+allow init self:capability2 block_suspend;
+allow init self:socket { read write };
+allow init servicemanager:binder call;
+allow init socket_device:sock_file create_file_perms;
+allow init socket_device:sock_file unlink;
+allow init ssd_device:blk_file write;
+allow init sysfs_camera_torch:lnk_file read;
+allow init tad_socket:sock_file create;
+allow init tad_socket:sock_file write;
+allow init tee_device:chr_file rw_file_perms;
+allow init tmpfs:lnk_file create_file_perms;
+allow init trim_area_partition_device:blk_file { rw_file_perms setattr };
+allow init vfat:file r_file_perms;
+allow init video_device:chr_file rw_file_perms;
+
+# Allow init to read files in /lta-label
+r_dir_file(init, lta_label)

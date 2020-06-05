@@ -1,0 +1,4 @@
+allow netmgrd net_data_file:dir read;
+allow netmgrd netd_socket:sock_file write;
+allow netmgrd self:capability dac_override;
+allow netmgrd toolbox_exec:file rx_file_perms;
