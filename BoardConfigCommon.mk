@@ -74,9 +74,16 @@ BOARD_HAVE_BLUETOOTH_BCM := true
 
 # Camera
 TARGET_USES_MEDIA_EXTENSIONS := true
-USE_DEVICE_SPECIFIC_CAMERA := true
-TARGET_HAS_LEGACY_CAMERA_HAL1 := true
-TARGET_CAMERASERVICE_CLOSES_NATIVE_HANDLES := true
+
+TARGET_PROCESS_SDK_VERSION_OVERRIDE := \
+    /system/bin/cameraserver=25 \
+    /system/bin/mediaserver=25 \
+    /system/bin/iddd=25 \
+    /system/bin/secd=25 \
+    /system/bin/tad_static=25 \
+    /system/bin/loc_launcher=25 \
+    /system/bin/mm-qcamera-daemon=25 \
+    /system/bin/sensors.qcom=25
 
 # Charger
 BOARD_CHARGER_ENABLE_SUSPEND := true
@@ -152,7 +159,7 @@ BOARD_PROVIDES_LIBRIL := true
 
 # Shims
 TARGET_LD_SHIM_LIBS := \
-     /system/vendor/lib/hw/camera.vendor.qcom.so|/system/vendor/lib/camera.qcom_shim.so \
+     /system/vendor/lib/hw/camera.vendor.msm8994.so|/system/vendor/lib/camera.qcom_shim.so \
      /system/lib64/libsys-utils.so|libsensor.so \
      /system/lib/libcammw.so|libsensor.so \
      /system/vendor/lib/libizat_core.so|/system/vendor/lib/libshim_gps.so \
