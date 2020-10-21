@@ -685,19 +685,19 @@ service audioserver /system/bin/audioserver
     writepid /dev/cpuset/foreground/tasks /dev/stune/foreground/tasks
     onrestart restart audio-hal-2-0
 
-service media /system/bin/mediaserver
-    class main
-    user media
-    group audio camera inet net_bt net_bt_admin net_bw_acct drmrpc mediadrm oem_2996
-    ioprio rt 4
-    writepid /dev/cpuset/foreground/tasks /dev/stune/foreground/tasks
+#service media /system/bin/mediaserver
+#    class main
+#    user media
+#    group audio camera inet net_bt net_bt_admin net_bw_acct drmrpc mediadrm oem_2996
+#    ioprio rt 4
+#    writepid /dev/cpuset/foreground/tasks /dev/stune/foreground/tasks
 
-service mediadrm /system/bin/mediadrmserver
-    class main
-    user media
-    group mediadrm drmrpc oem_2993
-    ioprio rt 4
-    writepid /dev/cpuset/foreground/tasks
+#service mediadrm /system/bin/mediadrmserver
+#    class main
+#    user media
+#    group mediadrm drmrpc oem_2993
+#    ioprio rt 4
+#    writepid /dev/cpuset/foreground/tasks
 
 service camera-provider-2-4 /vendor/bin/hw/android.hardware.camera.provider@2.4-service
     class hal
