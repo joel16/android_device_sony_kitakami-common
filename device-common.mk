@@ -29,6 +29,7 @@ endif
 
 # Permissions
 PRODUCT_COPY_FILES += \
+    external/ant-wireless/antradio-library/com.dsi.ant.antradio_library.xml:system/etc/permissions/com.dsi.ant.antradio_library.xml \
     frameworks/native/data/etc/android.hardware.bluetooth_le.xml:system/etc/permissions/android.hardware.bluetooth_le.xml \
     frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml:system/etc/permissions/android.hardware.camera.flash-autofocus.xml \
     frameworks/native/data/etc/android.hardware.camera.front.xml:system/etc/permissions/android.hardware.camera.front.xml \
@@ -62,12 +63,18 @@ PRODUCT_PACKAGES += \
     com.dsi.ant.antradio_library \
     libantradio
 
+
 # Audio
 PRODUCT_PACKAGES += \
-    audiod \
-    audio.a2dp.default \
     android.hardware.audio@2.0-impl \
+    android.hardware.audio@2.0-service \
     android.hardware.audio.effect@2.0-impl \
+    android.hardware.audio.effect@2.0-service \
+    android.hardware.soundtrigger@2.0-impl \
+    android.hardware.soundtrigger@2.0-service
+
+PRODUCT_PACKAGES += \
+    audio.a2dp.default \
     audio.primary.msm8994 \
     audio.r_submix.default \
     audio.usb.default \
@@ -76,13 +83,14 @@ PRODUCT_PACKAGES += \
     libqcomvoiceprocessing \
     tinymix
 
-# Audio configuration
 PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/audio/aanc_tuning_mixer.txt:$(TARGET_COPY_OUT_VENDOR)/etc/aanc_tuning_mixer.txt \
     $(LOCAL_PATH)/audio/audio_effects.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_effects.xml \
     $(LOCAL_PATH)/audio/audio_output_policy.conf:$(TARGET_COPY_OUT_VENDOR)/etc/audio_output_policy.conf \
     $(LOCAL_PATH)/audio/audio_platform_info.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_platform_info.xml \
     $(LOCAL_PATH)/audio/audio_policy.conf:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy.conf \
-    $(LOCAL_PATH)/audio/audio_tuning_mixer.txt:$(TARGET_COPY_OUT_VENDOR)/etc/audio_tuning_mixer.txt
+    $(LOCAL_PATH)/audio/sound_trigger_mixer_paths.xml:$(TARGET_COPY_OUT_VENDOR)/etc/sound_trigger_mixer_paths.xml \
+    $(LOCAL_PATH)/audio/sound_trigger_platform_info.xml:$(TARGET_COPY_OUT_VENDOR)/etc/sound_trigger_platform_info.xml
 
 # Bluetooth
 PRODUCT_COPY_FILES += \
@@ -111,6 +119,7 @@ PRODUCT_PACKAGES += \
     android.hardware.graphics.allocator@2.0-impl \
     android.hardware.graphics.allocator@2.0-service \
     android.hardware.graphics.composer@2.1-impl \
+    android.hardware.graphics.composer@2.1-service \
     android.hardware.graphics.mapper@2.0-impl \
     android.hardware.memtrack@1.0-impl \
     copybit.msm8994 \
@@ -121,7 +130,8 @@ PRODUCT_PACKAGES += \
 
 # Gatekeeper
 PRODUCT_PACKAGES += \
-    android.hardware.gatekeeper@1.0-impl
+    android.hardware.gatekeeper@1.0-impl \
+    android.hardware.gatekeeper@1.0-service
 
 # GPS
 PRODUCT_PACKAGES += \

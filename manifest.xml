@@ -1,7 +1,7 @@
 <manifest version="1.0" type="device">
     <hal format="hidl">
         <name>android.hardware.audio</name>
-        <transport arch="32+64">passthrough</transport>
+        <transport>hwbinder</transport>
         <version>2.0</version>
         <interface>
             <name>IDevicesFactory</name>
@@ -10,7 +10,7 @@
     </hal>
     <hal format="hidl">
         <name>android.hardware.audio.effect</name>
-        <transport arch="32+64">passthrough</transport>
+        <transport>hwbinder</transport>
         <version>2.0</version>
         <interface>
             <name>IEffectsFactory</name>
@@ -37,7 +37,7 @@
     </hal>
     <hal format="hidl">
         <name>android.hardware.camera.provider</name>
-        <transport arch="32">passthrough</transport>
+        <transport arch="32+64">passthrough</transport>
         <version>2.4</version>
         <interface>
             <name>ICameraProvider</name>
@@ -55,7 +55,7 @@
     </hal>
     <hal format="hidl">
         <name>android.hardware.gatekeeper</name>
-        <transport arch="32+64">passthrough</transport>
+        <transport>hwbinder</transport>
         <version>1.0</version>
         <interface>
             <name>IGatekeeper</name>
@@ -82,7 +82,7 @@
     </hal>
     <hal format="hidl">
         <name>android.hardware.graphics.composer</name>
-        <transport arch="32+64">passthrough</transport>
+        <transport>hwbinder</transport>
         <version>2.1</version>
         <interface>
             <name>IComposer</name>
@@ -155,14 +155,16 @@
     <hal format="hidl">
         <name>android.hardware.radio</name>
         <transport>hwbinder</transport>
-        <version>1.0</version>
+        <version>1.1</version>
         <interface>
             <name>IRadio</name>
             <instance>slot1</instance>
+            <instance>slot2</instance>
         </interface>
         <interface>
             <name>ISap</name>
             <instance>slot1</instance>
+            <instance>slot2</instance>
         </interface>
     </hal>
     <hal format="hidl">
@@ -172,6 +174,7 @@
         <interface>
             <name>IOemHook</name>
             <instance>slot1</instance>
+            <instance>slot2</instance>
         </interface>
     </hal>
     <hal format="hidl">
@@ -189,6 +192,15 @@
         <version>1.0</version>
         <interface>
             <name>ISensors</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
+    <hal format="hidl">
+        <name>android.hardware.soundtrigger</name>
+        <transport>hwbinder</transport>
+        <version>2.0</version>
+        <interface>
+            <name>ISoundTriggerHw</name>
             <instance>default</instance>
         </interface>
     </hal>
