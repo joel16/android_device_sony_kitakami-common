@@ -466,7 +466,7 @@ on post-fs-data
 on property:init.svc.wpa_supplicant=stopped
     stop dhcpcd
     
-service ppd /system/vendor/bin/mm-pp-daemon
+service ppd /system/bin/mm-pp-daemon
     class hal
     user system
     socket pps stream 0660 system system
