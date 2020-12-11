@@ -151,6 +151,16 @@ PRODUCT_PACKAGES += \
     libtinyxml \
     memtrack.msm8994
 
+# DumpState
+PRODUCT_PACKAGES += \
+    android.hardware.dumpstate@1.1-service-kitakami
+
+# FM
+PRODUCT_PACKAGES += \
+    FMRadio \
+    brcm-uim-sysfs \
+    libfmradio.v4l2-fm
+
 # Gatekeeper
 PRODUCT_PACKAGES += \
     android.hardware.gatekeeper@1.0-impl
