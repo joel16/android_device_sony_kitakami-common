@@ -20,8 +20,7 @@ $(call inherit-product, vendor/sony/kitakami-common/kitakami-common-vendor.mk)
 
 # Overlays
 DEVICE_PACKAGE_OVERLAYS += \
-    $(LOCAL_PATH)/overlay \
-    $(LOCAL_PATH)/overlay-lineage
+    $(LOCAL_PATH)/overlay
 
 # Radio config
 ifneq ($(BOARD_HAVE_RADIO),false)
@@ -31,9 +30,7 @@ endif
 
 PRODUCT_ENFORCE_RRO_TARGETS := *
 PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS += \
-     $(LOCAL_PATH)/overlay/lineage-sdk \
      $(LOCAL_PATH)/overlay/packages/apps/Snap/res/values
-
 
 # Permissions
 PRODUCT_COPY_FILES += \
@@ -205,11 +202,6 @@ PRODUCT_PACKAGES += \
     android.hardware.light@2.0-impl \
     lights.msm8994
 
-# LiveDisplay
-PRODUCT_PACKAGES += \
-    vendor.lineage.livedisplay@2.0-service-legacymm \
-    vendor.lineage.livedisplay@2.0-service-sysfs
-
 # Media
 PRODUCT_PACKAGES += \
     libc2dcolorconvert \
@@ -285,21 +277,19 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
    camera.qcom_shim
 
-# Thermal
+# Thermal management
 PRODUCT_PACKAGES += \
-    thermal.qcom
+    android.hardware.thermal@1.0-impl \
+    android.hardware.thermal@1.0-service
 
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/thermal-engine.conf:$(TARGET_COPY_OUT_VENDOR)/etc/thermal-engine.conf
+PRODUCT_PACKAGES += \
+    thermal.msm8994 \
+    thermanager
 
 # TimeKeep
 PRODUCT_PACKAGES += \
     timekeep \
     TimeKeep
-
-# Trust HAL
-PRODUCT_PACKAGES += \
-    vendor.lineage.trust@1.0-service
 
 # USB
 PRODUCT_PACKAGES += \

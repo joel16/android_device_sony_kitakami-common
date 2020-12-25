@@ -99,7 +99,6 @@ allow shell vendor_mpctl_prop:file { getattr open };
 allow shell vendor_rild_libpath_prop:file { getattr open };
 allow shell vendor_system_prop:file { getattr open };
 allow shell vendor_wifi_prop:file { getattr open };
-allow shell vendor_wifi_version:file { getattr open };
 allow shell vm_bms_prop:file { getattr open };
 allow shell wifi_prop:file { getattr open };
 allow shell wififtmd_prop:file { getattr open };

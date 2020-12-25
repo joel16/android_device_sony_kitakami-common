@@ -1,3 +1,6 @@
+# firmware_file
+/firmware(/.*)?                                            u:object_r:firmware_file:s0
+
 # NFC
 /dev/pn54x                                                 u:object_r:nfc_device:s0
 
@@ -72,8 +75,10 @@
 /system/bin/taimport                                       u:object_r:taimport_exec:s0
 /system/bin/ta_qmi_service                                 u:object_r:ta_qmi_service_exec:s0
 /system/bin/updatemiscta                                   u:object_r:updatemiscta_exec:s0
+/system/vendor/bin/macaddrsetup                            u:object_r:addrsetup_exec:s0
 /system/vendor/bin/mm-pp-daemon                            u:object_r:ppd_exec:s0
 /system/vendor/bin/perfd                                   u:object_r:perfd_exec:s0
+/system/vendor/bin/thermanager                             u:object_r:thermanager_exec:s0
 /system/vendor/bin/timekeep                                u:object_r:timekeep_exec:s0
 
 /system/vendor/(lib|lib64)/libril-wrapper\.so              u:object_r:hal_ril_wrapper_exec:s0

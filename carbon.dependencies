@@ -1,0 +1,24 @@
+[
+  {
+    "remote": "lineage",
+    "repository": "LineageOS/android_hardware_sony_thermanager",
+    "target_path": "hardware/sony/thermanager",
+    "revision": "lineage-17.1"
+  },
+  {
+    "remote": "lineage",
+    "repository": "LineageOS/android_hardware_sony_timekeep",
+    "target_path": "hardware/sony/timekeep",
+    "revision": "lineage-17.1"
+  },
+  {
+    "remote": "lineage",
+    "repository": "LineageOS/android_hardware_sony_macaddrsetup",
+    "target_path": "hardware/sony/macaddrsetup",
+    "revision": "lineage-17.1"
+  },
+  {
+    "repository": "android_kernel_sony_msm8994",
+    "target_path": "kernel/sony/msm8994"
+  }
+]
