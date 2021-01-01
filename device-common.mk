@@ -277,6 +277,7 @@ PRODUCT_PACKAGES += \
     android.hardware.thermal@1.0-service
 
 PRODUCT_PACKAGES += \
+    thermal.msm8994 \
     thermanager
 
 # TimeKeep
