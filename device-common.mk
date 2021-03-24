@@ -205,11 +205,6 @@ PRODUCT_PACKAGES += \
     android.hardware.light@2.0-impl \
     lights.msm8994
 
-# LiveDisplay
-PRODUCT_PACKAGES += \
-    vendor.lineage.livedisplay@2.0-service-legacymm \
-    vendor.lineage.livedisplay@2.0-service-sysfs
-
 # Media
 PRODUCT_PACKAGES += \
     libc2dcolorconvert \

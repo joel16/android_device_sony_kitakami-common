@@ -650,13 +650,6 @@ service per_proxy /system/bin/pm-proxy
     group system net_raw
     disabled
 
-service ppd /system/vendor/bin/mm-pp-daemon
-    class hal
-    user system
-    socket pps stream 0660 system system
-    group system graphics
-    writepid /dev/cpuset/system-background/tasks
-
 on property:init.svc.per_mgr=running
     start per_proxy
 
