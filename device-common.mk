@@ -319,7 +319,4 @@ PRODUCT_PACKAGES += \
     wpa_supplicant \
     wpa_supplicant.conf
 
-PRODUCT_PACKAGES += \
-   macaddrsetup
-
 $(call inherit-product, hardware/broadcom/wlan/bcmdhd/config/config-bcm.mk)
