@@ -61,8 +61,20 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 #VoLTE / VoWifi
 PRODUCT_PROPERTY_OVERRIDES += \
+    DEVICE_PROVISIONED=1 \
     persist.dbg.ims_volte_enable=1 \
     persist.dbg.volte_avail_ovr=1 \
-    persist.dbg.vt_avail_ovr=1 \
-    persist.dbg.wfc_avail_ovr=1 \
-    persist.radio.calls.on.ims=1
+    persist.dbg.vt_avail_ovr=0 \
+    persist.dbg.wfc_avail_ovr=0 \
+    persist.radio.calls.on.ims=1 \
+    persist.data.iwlan.enable=false \
+    persist.radio.enable_nw_cw=1 \
+    persist.ro.ril.sms_sync_sending=1 \
+    ro.nfc.se.sim.enable=true \
+    persist.ims.volte=true \
+    persist.radio.RATE_ADAPT_ENABLE=1 \
+    persist.radio.ROTATION_ENABLE=1 \
+    persist.radio.VT_ENABLE=1 \
+    persist.radio.VT_HYBRID_ENABLE=1 \
+    ro.cst.prm=1281-1806:R2D \
+    persist.radio.ue_interrogate=0
