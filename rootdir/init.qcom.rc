@@ -625,14 +625,10 @@ service vendor.perfd /vendor/bin/perfd
     disabled
     writepid /dev/cpuset/system-background/tasks
 
-service thermal-engine /vendor/bin/thermal-engine
+service thermanager /vendor/bin/thermanager /vendor/etc/thermanager.xml
     class main
     user root
-    socket thermal-send-client stream 0666 system system
-    socket thermal-recv-client stream 0660 system system
-    socket thermal-recv-passive-client stream 0666 system system
-    group root
-    writepid /dev/cpuset/system-background/tasks
+    group root system
 
 service adsprpcd /system/bin/adsprpcd
    class main

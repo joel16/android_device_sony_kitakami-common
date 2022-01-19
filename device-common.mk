@@ -347,6 +347,10 @@ PRODUCT_SOONG_NAMESPACES += \
 PRODUCT_PACKAGES += \
     TetheringConfigOverlay
 
+# Thermal management
+PRODUCT_PACKAGES += \
+    thermanager
+
 # TimeKeep
 PRODUCT_PACKAGES += \
     timekeep \
