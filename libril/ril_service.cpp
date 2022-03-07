@@ -113,12 +113,6 @@ void convertRilLceDataInfoToHal(void *response, size_t responseLen, LceDataInfo&
 void convertRilSignalStrengthToHal(void *response, size_t responseLen,
         SignalStrength& signalStrength);
 
-void convertRilDataCallToHal(RIL_Data_Call_Response_v6 *dcResponse,
-        SetupDataCallResult& dcResult);
-
-void convertRilDataCallToHal(RIL_Data_Call_Response_v9 *dcResponse,
-        SetupDataCallResult& dcResult);
-
 void convertRilDataCallToHal(RIL_Data_Call_Response_v11 *dcResponse,
         SetupDataCallResult& dcResult);
 
@@ -1375,15 +1369,8 @@ Return<void> RadioImpl::setNetworkSelectionModeManual(int32_t serial,
 #if VDBG
     RLOGD("setNetworkSelectionModeManual: serial %d", serial);
 #endif
-#ifndef OLD_MNC_FORMAT
     dispatchStrings(serial, mSlotId, RIL_REQUEST_SET_NETWORK_SELECTION_MANUAL, true,
             1, operatorNumeric.c_str());
-#else
-    std::string opNum = operatorNumeric;
-    opNum.append("+");
-    dispatchStrings(serial, mSlotId, RIL_REQUEST_SET_NETWORK_SELECTION_MANUAL, true,
-            1, opNum.c_str());
-#endif
     return Void();
 }
 
@@ -3507,8 +3494,7 @@ int radio::getSignalStrengthResponse(int slotId,
         RadioResponseInfo responseInfo = {};
         populateResponseInfo(responseInfo, serial, responseType, e);
         SignalStrength signalStrength = {};
-        if (response == NULL || (responseLen != sizeof(RIL_SignalStrength_v10)
-                && responseLen != sizeof(RIL_SignalStrength_v8))) {
+        if (response == NULL || responseLen != sizeof(RIL_SignalStrength_v10)) {
             RLOGE("getSignalStrengthResponse: Invalid response");
             if (e == RIL_E_SUCCESS) responseInfo.error = RadioError::INVALID_RESPONSE;
         } else {
@@ -4136,10 +4122,7 @@ int radio::setupDataCallResponse(int slotId,
         populateResponseInfo(responseInfo, serial, responseType, e);
 
         SetupDataCallResult result = {};
-
-        if (response == NULL || (responseLen % sizeof(RIL_Data_Call_Response_v11) != 0
-                && responseLen % sizeof(RIL_Data_Call_Response_v9) != 0
-                && responseLen % sizeof(RIL_Data_Call_Response_v6) != 0)) {
+        if (response == NULL || (responseLen % sizeof(RIL_Data_Call_Response_v11)) != 0) {
             if (response != NULL) {
                 RLOGE("setupDataCallResponse: Invalid response");
                 if (e == RIL_E_SUCCESS) responseInfo.error = RadioError::INVALID_RESPONSE;
@@ -4151,12 +4134,8 @@ int radio::setupDataCallResponse(int slotId,
             result.dnses = hidl_string();
             result.gateways = hidl_string();
             result.pcscf = hidl_string();
-        } else if ((responseLen % sizeof(RIL_Data_Call_Response_v11)) == 0) {
+        } else {
             convertRilDataCallToHal((RIL_Data_Call_Response_v11 *) response, result);
-        } else if ((responseLen % sizeof(RIL_Data_Call_Response_v9)) == 0) {
-            convertRilDataCallToHal((RIL_Data_Call_Response_v9 *) response, result);
-        } else if ((responseLen % sizeof(RIL_Data_Call_Response_v6)) == 0) {
-            convertRilDataCallToHal((RIL_Data_Call_Response_v6 *) response, result);
         }
 
         Return<void> retStatus = radioService[slotId]->mRadioResponse->setupDataCallResponse(
@@ -4643,7 +4622,7 @@ int radio::getAvailableNetworksResponse(int slotId,
         populateResponseInfo(responseInfo, serial, responseType, e);
         hidl_vec<OperatorInfo> networks;
         if ((response == NULL && responseLen != 0)
-                || responseLen % (mqanelements * sizeof(char *))!= 0) {
+                || responseLen % (mqanelements * sizeof(char *))!= 0)  {
             RLOGE("getAvailableNetworksResponse Invalid response: NULL");
             if (e == RIL_E_SUCCESS) responseInfo.error = RadioError::INVALID_RESPONSE;
         } else {
@@ -4653,12 +4632,7 @@ int radio::getAvailableNetworksResponse(int slotId,
             for (int i = 0, j = 0; i < numStrings; i = i + mqanelements, j++) {
                 networks[j].alphaLong = convertCharPtrToHidlString(resp[i]);
                 networks[j].alphaShort = convertCharPtrToHidlString(resp[i + 1]);
-#ifndef OLD_MNC_FORMAT
                 networks[j].operatorNumeric = convertCharPtrToHidlString(resp[i + 2]);
-#else
-                const char *mccmncIdx = strrchr(resp[i + 2], '+');
-                networks[j].operatorNumeric = hidl_string(resp[i + 2], mccmncIdx - resp[i + 2]);
-#endif
                 int status = convertOperatorStatusToInt(resp[i + 3]);
                 if (status == -1) {
                     if (e == RIL_E_SUCCESS) responseInfo.error = RadioError::INVALID_RESPONSE;
@@ -4842,9 +4816,7 @@ int radio::getDataCallListResponse(int slotId,
 
         hidl_vec<SetupDataCallResult> ret;
         if ((response == NULL && responseLen != 0)
-                || (responseLen % sizeof(RIL_Data_Call_Response_v11) != 0
-                && responseLen % sizeof(RIL_Data_Call_Response_v9) != 0
-                && responseLen % sizeof(RIL_Data_Call_Response_v6) != 0)) {
+                || responseLen % sizeof(RIL_Data_Call_Response_v11) != 0) {
             RLOGE("getDataCallListResponse: invalid response");
             if (e == RIL_E_SUCCESS) responseInfo.error = RadioError::INVALID_RESPONSE;
         } else {
@@ -7115,50 +7087,7 @@ int radio::nitzTimeReceivedInd(int slotId,
     return 0;
 }
 
-void convertRilSignalStrengthToHalV8(void *response, size_t responseLen,
-        SignalStrength& signalStrength) {
-    RIL_SignalStrength_v8 *rilSignalStrength = (RIL_SignalStrength_v8 *) response;
-
-    // Fixup LTE for backwards compatibility
-    // signalStrength: -1 -> 99
-    if (rilSignalStrength->LTE_SignalStrength.signalStrength == -1) {
-        rilSignalStrength->LTE_SignalStrength.signalStrength = 99;
-    }
-    // rsrp: -1 -> INT_MAX all other negative value to positive.
-    // So remap here
-    if (rilSignalStrength->LTE_SignalStrength.rsrp == -1) {
-        rilSignalStrength->LTE_SignalStrength.rsrp = INT_MAX;
-    } else if (rilSignalStrength->LTE_SignalStrength.rsrp < -1) {
-        rilSignalStrength->LTE_SignalStrength.rsrp = -rilSignalStrength->LTE_SignalStrength.rsrp;
-    }
-    // rsrq: -1 -> INT_MAX
-    if (rilSignalStrength->LTE_SignalStrength.rsrq == -1) {
-        rilSignalStrength->LTE_SignalStrength.rsrq = INT_MAX;
-    }
-    // Not remapping rssnr is already using INT_MAX
-    // cqi: -1 -> INT_MAX
-    if (rilSignalStrength->LTE_SignalStrength.cqi == -1) {
-        rilSignalStrength->LTE_SignalStrength.cqi = INT_MAX;
-    }
-
-    signalStrength.gw.signalStrength = rilSignalStrength->GW_SignalStrength.signalStrength;
-    signalStrength.gw.bitErrorRate = rilSignalStrength->GW_SignalStrength.bitErrorRate;
-    signalStrength.cdma.dbm = rilSignalStrength->CDMA_SignalStrength.dbm;
-    signalStrength.cdma.ecio = rilSignalStrength->CDMA_SignalStrength.ecio;
-    signalStrength.evdo.dbm = rilSignalStrength->EVDO_SignalStrength.dbm;
-    signalStrength.evdo.ecio = rilSignalStrength->EVDO_SignalStrength.ecio;
-    signalStrength.evdo.signalNoiseRatio =
-            rilSignalStrength->EVDO_SignalStrength.signalNoiseRatio;
-    signalStrength.lte.signalStrength = rilSignalStrength->LTE_SignalStrength.signalStrength;
-    signalStrength.lte.rsrp = rilSignalStrength->LTE_SignalStrength.rsrp;
-    signalStrength.lte.rsrq = rilSignalStrength->LTE_SignalStrength.rsrq;
-    signalStrength.lte.rssnr = rilSignalStrength->LTE_SignalStrength.rssnr;
-    signalStrength.lte.cqi = rilSignalStrength->LTE_SignalStrength.cqi;
-    signalStrength.lte.timingAdvance = rilSignalStrength->LTE_SignalStrength.timingAdvance;
-    signalStrength.tdScdma.rscp = INT_MAX;
-}
-
-void convertRilSignalStrengthToHalV10(void *response, size_t responseLen,
+void convertRilSignalStrengthToHal(void *response, size_t responseLen,
         SignalStrength& signalStrength) {
     RIL_SignalStrength_v10 *rilSignalStrength = (RIL_SignalStrength_v10 *) response;
 
@@ -7205,21 +7134,11 @@ void convertRilSignalStrengthToHalV10(void *response, size_t responseLen,
     signalStrength.tdScdma.rscp = rilSignalStrength->TD_SCDMA_SignalStrength.rscp;
 }
 
-void convertRilSignalStrengthToHal(void *response, size_t responseLen,
-        SignalStrength& signalStrength) {
-    if (responseLen == sizeof(RIL_SignalStrength_v8)) {
-        convertRilSignalStrengthToHalV8(response, responseLen, signalStrength);
-    } else {
-        convertRilSignalStrengthToHalV10(response, responseLen, signalStrength);
-    }
-}
-
 int radio::currentSignalStrengthInd(int slotId,
                                     int indicationType, int token, RIL_Errno e,
                                     void *response, size_t responseLen) {
     if (radioService[slotId] != NULL && radioService[slotId]->mRadioIndication != NULL) {
-        if (response == NULL || (responseLen != sizeof(RIL_SignalStrength_v10)
-                && responseLen != sizeof(RIL_SignalStrength_v8))) {
+        if (response == NULL || responseLen != sizeof(RIL_SignalStrength_v10)) {
             RLOGE("currentSignalStrengthInd: invalid response");
             return 0;
         }
@@ -7241,36 +7160,6 @@ int radio::currentSignalStrengthInd(int slotId,
     return 0;
 }
 
-void convertRilDataCallToHal(RIL_Data_Call_Response_v6 *dcResponse,
-        SetupDataCallResult& dcResult) {
-    dcResult.status = (DataCallFailCause) dcResponse->status;
-    dcResult.suggestedRetryTime = dcResponse->suggestedRetryTime;
-    dcResult.cid = dcResponse->cid;
-    dcResult.active = dcResponse->active;
-    dcResult.type = convertCharPtrToHidlString(dcResponse->type);
-    dcResult.ifname = convertCharPtrToHidlString(dcResponse->ifname);
-    dcResult.addresses = convertCharPtrToHidlString(dcResponse->addresses);
-    dcResult.dnses = convertCharPtrToHidlString(dcResponse->dnses);
-    dcResult.gateways = convertCharPtrToHidlString(dcResponse->gateways);
-    dcResult.pcscf = hidl_string();
-    dcResult.mtu = 0;
-}
-
-void convertRilDataCallToHal(RIL_Data_Call_Response_v9 *dcResponse,
-        SetupDataCallResult& dcResult) {
-    dcResult.status = (DataCallFailCause) dcResponse->status;
-    dcResult.suggestedRetryTime = dcResponse->suggestedRetryTime;
-    dcResult.cid = dcResponse->cid;
-    dcResult.active = dcResponse->active;
-    dcResult.type = convertCharPtrToHidlString(dcResponse->type);
-    dcResult.ifname = convertCharPtrToHidlString(dcResponse->ifname);
-    dcResult.addresses = convertCharPtrToHidlString(dcResponse->addresses);
-    dcResult.dnses = convertCharPtrToHidlString(dcResponse->dnses);
-    dcResult.gateways = convertCharPtrToHidlString(dcResponse->gateways);
-    dcResult.pcscf = convertCharPtrToHidlString(dcResponse->pcscf);
-    dcResult.mtu = 0;
-}
-
 void convertRilDataCallToHal(RIL_Data_Call_Response_v11 *dcResponse,
         SetupDataCallResult& dcResult) {
     dcResult.status = (DataCallFailCause) dcResponse->status;
@@ -7288,29 +7177,12 @@ void convertRilDataCallToHal(RIL_Data_Call_Response_v11 *dcResponse,
 
 void convertRilDataCallListToHal(void *response, size_t responseLen,
         hidl_vec<SetupDataCallResult>& dcResultList) {
-    int num;
+    int num = responseLen / sizeof(RIL_Data_Call_Response_v11);
 
-    if ((responseLen % sizeof(RIL_Data_Call_Response_v11)) == 0) {
-        num = responseLen / sizeof(RIL_Data_Call_Response_v11);
-        RIL_Data_Call_Response_v11 *dcResponse = (RIL_Data_Call_Response_v11 *) response;
-        dcResultList.resize(num);
-        for (int i = 0; i < num; i++) {
-            convertRilDataCallToHal(&dcResponse[i], dcResultList[i]);
-        }
-    } else if ((responseLen % sizeof(RIL_Data_Call_Response_v9)) == 0) {
-        num = responseLen / sizeof(RIL_Data_Call_Response_v9);
-        RIL_Data_Call_Response_v9 *dcResponse = (RIL_Data_Call_Response_v9 *) response;
-        dcResultList.resize(num);
-        for (int i = 0; i < num; i++) {
-            convertRilDataCallToHal(&dcResponse[i], dcResultList[i]);
-        }
-    } else if ((responseLen % sizeof(RIL_Data_Call_Response_v6)) == 0) {
-        num = responseLen / sizeof(RIL_Data_Call_Response_v6);
-        RIL_Data_Call_Response_v6 *dcResponse = (RIL_Data_Call_Response_v6 *) response;
-        dcResultList.resize(num);
-        for (int i = 0; i < num; i++) {
-            convertRilDataCallToHal(&dcResponse[i], dcResultList[i]);
-        }
+    RIL_Data_Call_Response_v11 *dcResponse = (RIL_Data_Call_Response_v11 *) response;
+    dcResultList.resize(num);
+    for (int i = 0; i < num; i++) {
+        convertRilDataCallToHal(&dcResponse[i], dcResultList[i]);
     }
 }
 
@@ -7319,9 +7191,7 @@ int radio::dataCallListChangedInd(int slotId,
                                   size_t responseLen) {
     if (radioService[slotId] != NULL && radioService[slotId]->mRadioIndication != NULL) {
         if ((response == NULL && responseLen != 0)
-                || (responseLen % sizeof(RIL_Data_Call_Response_v11) != 0
-                && responseLen % sizeof(RIL_Data_Call_Response_v9) != 0
-                && responseLen % sizeof(RIL_Data_Call_Response_v6) != 0)) {
+                || responseLen % sizeof(RIL_Data_Call_Response_v11) != 0) {
             RLOGE("dataCallListChangedInd: invalid response");
             return 0;
         }
