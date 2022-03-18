@@ -225,11 +225,6 @@ etc/firmware/venus.b03
 etc/firmware/venus.b04
 etc/firmware/venus.mdt
 
-# Smart camera
-vendor/lib/libmmcamera_chromaflash_lib.so
-vendor/lib/libmmcamera_optizoom_lib.so
-vendor/lib/libmmcamera_ubifocus_lib.so
-
 # TA
 bin/mlog_qmi_service
 bin/sct_service
@@ -247,13 +242,6 @@ lib64/libmiscta.so
 lib64/libprotobuf-c.so
 lib64/libsys-utils.so
 lib64/libta.so
-
-# Thermal - OP2 - OxygenOS 3.6.0
-etc/thermal-engine.conf
-vendor/bin/thermal-engine
-vendor/lib/libthermalclient.so
-vendor/lib64/libthermalclient.so
-vendor/lib64/libthermalioctl.so
 
 # Time services
 -vendor/lib/libtime_genoff.so
